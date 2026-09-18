@@ -1,0 +1,37 @@
+artifact_path: mlflow-artifacts:/1/models/m-64f9e9bea15a470ab50872cecdda2223/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.14
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - sklearn.tree._tree.Tree
+is_signature_from_type_hint: false
+mlflow_version: 3.16.1
+model_id: m-64f9e9bea15a470ab50872cecdda2223
+model_size_bytes: 4746474
+model_uuid: m-64f9e9bea15a470ab50872cecdda2223
+prompts: null
+run_id: d9571388a61f45369e4f709878e8246b
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "brightness", "required": true}, {"type": "double",
+    "name": "motion", "required": true}, {"type": "double", "name": "face_visibility",
+    "required": true}, {"type": "double", "name": "signal_quality", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-09-18 15:48:19.454570'

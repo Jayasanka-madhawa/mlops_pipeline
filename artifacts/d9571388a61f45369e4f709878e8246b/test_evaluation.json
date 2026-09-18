@@ -1,0 +1,25 @@
+{
+  "model_run_id": "d9571388a61f45369e4f709878e8246b",
+  "test_rows": 1200,
+  "test_sha256": "44aef8b7440b04ddb159d00f659157f668ffe941289d1984aa8a2ebe0e3ce14d",
+  "threshold": 0.5,
+  "metrics": {
+    "test_accuracy": 0.6483333333333333,
+    "test_baseline_accuracy": 0.5916666666666667,
+    "test_precision": 0.664009111617312,
+    "test_recall": 0.8211267605633803,
+    "test_f1": 0.7342569269521411,
+    "test_roc_auc": 0.679485484334579,
+    "test_log_loss": 0.6298765096742798
+  },
+  "confusion_matrix": [
+    [
+      195,
+      295
+    ],
+    [
+      127,
+      583
+    ]
+  ]
+}

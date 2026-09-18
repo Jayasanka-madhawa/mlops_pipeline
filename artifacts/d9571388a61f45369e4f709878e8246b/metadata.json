@@ -1,0 +1,25 @@
+{
+  "run_id": "d9571388a61f45369e4f709878e8246b",
+  "candidate": "v1",
+  "features": [
+    "brightness",
+    "motion",
+    "face_visibility",
+    "signal_quality"
+  ],
+  "target": "acceptable",
+  "class_labels": {
+    "0": "poor",
+    "1": "acceptable"
+  },
+  "threshold": 0.5,
+  "metrics": {
+    "validation_accuracy": 0.6383333333333333,
+    "validation_precision": 0.6540178571428571,
+    "validation_recall": 0.8253521126760563,
+    "validation_f1": 0.7297633872976339,
+    "validation_roc_auc": 0.6736734693877552,
+    "validation_log_loss": 0.630641024175197,
+    "baseline_accuracy": 0.5916666666666667
+  }
+}
