@@ -50,27 +50,17 @@ pipeline {
             }
         }
 
-        stage('Prepare model and data') {
+        stage('Prepare release bundle') {
             steps {
                 sh '''
-                    set -eu
-
-                    test -f "$SOURCE_PROJECT/artifacts/$MODEL_RUN_ID/model.joblib"
-                    test -f "$SOURCE_PROJECT/artifacts/$MODEL_RUN_ID/metadata.json"
-                    test -f "$SOURCE_PROJECT/data/validation.csv"
-                    test -f "$SOURCE_PROJECT/data/reference_features.csv"
-
-                    mkdir -p "artifacts/$MODEL_RUN_ID" data
-
-                    cp "$SOURCE_PROJECT/artifacts/$MODEL_RUN_ID/model.joblib" \
-                       "artifacts/$MODEL_RUN_ID/"
-
-                    cp "$SOURCE_PROJECT/artifacts/$MODEL_RUN_ID/metadata.json" \
-                       "artifacts/$MODEL_RUN_ID/"
-
-                    cp "$SOURCE_PROJECT/data/validation.csv" data/
-                    cp "$SOURCE_PROJECT/data/reference_features.csv" data/
+                    "$CONDA_BIN" run -n mlops python scripts/release.py \
+                    hydrate "$MODEL_RUN_ID"
                 '''
+
+                archiveArtifacts(
+                    artifacts: 'release-manifest.json',
+                    fingerprint: true
+                )
             }
         }
 
