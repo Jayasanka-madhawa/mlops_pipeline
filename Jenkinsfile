@@ -23,6 +23,10 @@ pipeline {
         SOURCE_PROJECT = '/Users/jayasanka/Documents/mlops_pipeline'
     }
 
+    triggers {
+    pollSCM('H/5 * * * *')
+    }       
+
     stages {
         stage('Checkout') {
             steps {
