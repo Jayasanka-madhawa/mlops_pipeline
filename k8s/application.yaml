@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scan-quality
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prediction-data
+  namespace: scan-quality
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scan-quality
+  namespace: scan-quality
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: scan-quality
+  template:
+    metadata:
+      labels:
+        app: scan-quality
+    spec:
+      containers:
+        - name: api
+          image: scan-quality:ci-8-2e516b38c47f
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: api
+              containerPort: 8001
+          volumeMounts:
+            - name: prediction-data
+              mountPath: /app/data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 5
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+        - name: drift-monitor
+          image: scan-quality:ci-8-2e516b38c47f
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - monitoring/drift_monitor.py
+          env:
+            - name: REFERENCE_PATH
+              value: /app/reference_features.csv
+          ports:
+            - name: drift-metrics
+              containerPort: 8002
+          volumeMounts:
+            - name: prediction-data
+              mountPath: /app/data
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          readinessProbe:
+            tcpSocket:
+              port: drift-metrics
+            periodSeconds: 5
+            timeoutSeconds: 3
+
+      volumes:
+        - name: prediction-data
+          persistentVolumeClaim:
+            claimName: prediction-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scan-quality
+  namespace: scan-quality
+spec:
+  selector:
+    app: scan-quality
+  ports:
+    - name: api
+      port: 8001
+      targetPort: api
+    - name: drift-metrics
+      port: 8002
+      targetPort: drift-metrics
