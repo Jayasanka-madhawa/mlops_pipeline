@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Generated datasets and model artifacts
+data/
+artifacts/
+
+# MLflow storage
+mlartifacts/
+mlruns/
+mlflow.db*
+
+# Runtime databases
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Local files
+.DS_Store
