@@ -80,6 +80,7 @@ def health():
     return {
         "status": "ok",
         "model_version": app.state.metadata["run_id"],
+        "application_version": "v2",
     }
 
 

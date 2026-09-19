@@ -51,3 +51,19 @@ API tests, a small load test and held-out evaluation.
 
 Delayed-label monitoring, automated retraining and cloud CI/CD
 are deferred.# mlops_pipeline
+
+## Source code and model artifacts
+
+Git tracks application code, training scripts, tests and configuration.
+
+Generated datasets, model artifacts, runtime databases and the local
+.env file are excluded.
+
+A fresh checkout must generate the dataset and train a model, or obtain
+the required artifacts separately, before building the application image.
+
+Copy .env.example to .env and set MODEL_RUN_ID to the selected training
+run. Use a new RELEASE_TAG for each new build.
+
+The current source includes the v2 health-response change. The running
+deployment may still use the retained v1 image after the rollback drill.
