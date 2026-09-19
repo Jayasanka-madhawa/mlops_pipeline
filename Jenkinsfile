@@ -20,7 +20,6 @@ pipeline {
 
     environment {
         CONDA_BIN = '/Users/jayasanka/miniconda3/bin/conda'
-        SOURCE_PROJECT = '/Users/jayasanka/Documents/mlops_pipeline'
     }
 
     triggers {
@@ -149,6 +148,19 @@ pipeline {
                         allowEmptyArchive: true
                     )
                 }
+            }
+        }
+        stage('Prepare release bundle') {
+            steps {
+                sh '''
+                    "$CONDA_BIN" run -n mlops python scripts/release.py \
+                    hydrate "$MODEL_RUN_ID"
+                '''
+
+                archiveArtifacts(
+                    artifacts: 'release-manifest.json',
+                    fingerprint: true
+                )
             }
         }
     }

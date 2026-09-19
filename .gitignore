@@ -26,3 +26,5 @@ mlflow.db*
 
 # Local files
 .DS_Store
+
+release-manifest.json
