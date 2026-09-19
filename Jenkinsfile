@@ -110,5 +110,46 @@ pipeline {
                 )
             }
         }
+        stage('Container smoke test') {
+            options {
+                timeout(time: 3, unit: 'MINUTES')
+            }
+
+            steps {
+                script {
+                    env.SMOKE_CONTAINER = "scan-smoke-${env.IMAGE_TAG}"
+                }
+
+                sh '''
+                    set -eu
+
+                    docker run -d \
+                    --name "$SMOKE_CONTAINER" \
+                    "scan-quality:$IMAGE_TAG"
+
+                    docker cp tests/container_smoke.py \
+                    "$SMOKE_CONTAINER:/tmp/container_smoke.py"
+
+                    docker exec "$SMOKE_CONTAINER" \
+                    python /tmp/container_smoke.py "$MODEL_RUN_ID"
+                '''
+            }
+
+            post {
+                always {
+                    sh '''
+                        if [ -n "${SMOKE_CONTAINER:-}" ]; then
+                            docker logs "$SMOKE_CONTAINER" > smoke-container.log 2>&1 || true
+                            docker rm -f "$SMOKE_CONTAINER" || true
+                        fi
+                    '''
+
+                    archiveArtifacts(
+                        artifacts: 'smoke-container.log',
+                        allowEmptyArchive: true
+                    )
+                }
+            }
+        }
     }
 }
