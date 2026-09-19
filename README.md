@@ -67,3 +67,5 @@ run. Use a new RELEASE_TAG for each new build.
 
 The current source includes the v2 health-response change. The running
 deployment may still use the retained v1 image after the rollback drill.
+
+CI: Jenkins checks main for changes approximately every five minutes.
