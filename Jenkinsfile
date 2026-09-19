@@ -141,5 +141,17 @@ pipeline {
             }
         }
 
+        stage('Load image into Kind') {
+            steps {
+                sh '''
+                    set -eu
+
+                    /opt/homebrew/bin/kind load docker-image \
+                    "scan-quality:$IMAGE_TAG" \
+                    --name mlops
+                '''
+            }
+        }
+
     }
 }
