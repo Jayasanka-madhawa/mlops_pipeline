@@ -111,12 +111,15 @@ metadata:
   name: scan-quality
   namespace: scan-quality
 spec:
+  type: NodePort
   selector:
     app: scan-quality
   ports:
     - name: api
       port: 8001
       targetPort: api
+      nodePort: 30081
     - name: drift-metrics
       port: 8002
       targetPort: drift-metrics
+      nodePort: 30082
