@@ -40,6 +40,9 @@ services:
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
+    networks:
+      - default
+      - kind
 
   grafana:
     image: grafana/grafana:latest
@@ -53,3 +56,9 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+  
+networks:
+  default:
+  kind:
+    external: true
+    name: kind
