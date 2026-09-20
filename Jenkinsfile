@@ -153,5 +153,46 @@ pipeline {
             }
         }
 
+        stage('Update deployment in Git') {
+            steps {
+                withCredentials([
+                    gitUsernamePassword(
+                        credentialsId: 'github-gitops-write',
+                        gitToolName: 'mac-git'
+                    )
+                ]) {
+                    sh '''
+                        set -eu
+
+                        git fetch origin main
+
+                        if [ "$(git rev-parse HEAD)" != \
+                            "$(git rev-parse origin/main)" ]; then
+                            echo "main changed during this build."
+                            echo "Run a new build against the latest commit."
+                            exit 1
+                        fi
+
+                        "$CONDA_BIN" run -n mlops \
+                        python scripts/update_deployment.py \
+                        "scan-quality:$IMAGE_TAG"
+
+                        git config user.name "Jenkins CI"
+                        git config user.email "jenkins@mlops.local"
+
+                        git add k8s/application.yaml
+
+                        if git diff --cached --quiet; then
+                            echo "Deployment already references this image."
+                            exit 0
+                        fi
+
+                        git commit -m "Deploy scan-quality:$IMAGE_TAG"
+                        git push origin HEAD:main
+                    '''
+                }
+            }
+        }
+
     }
 }
