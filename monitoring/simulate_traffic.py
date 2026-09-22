@@ -12,6 +12,11 @@ parser.add_argument(
     default="normal",
 )
 parser.add_argument("--count", type=int, default=300)
+parser.add_argument(
+    "--url",
+    default="http://127.0.0.1:8001",
+    help="API base URL",
+)
 args = parser.parse_args()
 
 # Different seed from training: fresh samples.
@@ -40,7 +45,7 @@ with requests.Session() as session:
         }
 
         response = session.post(
-            "http://127.0.0.1:8001/predict",
+            f"{args.url.rstrip('/')}/predict",
             json=payload,
             timeout=10,
         )
