@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: scan-quality:ci-20-5ecb6e224cd6
+          image: scan-quality:ci-21-c23b31e93091
           imagePullPolicy: IfNotPresent
           ports:
             - name: api
@@ -72,7 +72,7 @@ spec:
             failureThreshold: 3
 
         - name: drift-monitor
-          image: scan-quality:ci-20-5ecb6e224cd6
+          image: scan-quality:ci-21-c23b31e93091
           imagePullPolicy: IfNotPresent
           command:
             - python
